@@ -521,24 +521,19 @@ begin
         end;
         
         Plugins64Path := EnsureTrailingBackslash(drawDir) + 'Plugins64';
+        // 如果 Plugins64 目录不存在，则自动创建
         if not DirExists(Plugins64Path) then
         begin
-          MsgBox(GetLocalizedString(
-            'Plugins64 directory not found.' + #13#10 + #13#10 +
-            'Selected Draw directory:' + #13#10 + drawDir + #13#10 + #13#10 +
-            'Expected Plugins64 directory:' + #13#10 + Plugins64Path + #13#10 + #13#10 +
-            'Please confirm that CorelDRAW is properly installed.',
-            '未找到 Plugins64 目录。' + #13#10 + #13#10 +
-            '选择的 Draw 目录：' + #13#10 + drawDir + #13#10 + #13#10 +
-            '期望的 Plugins64 目录：' + #13#10 + Plugins64Path + #13#10 + #13#10 +
-            '请确认 CorelDRAW 已正确安装。',
-            'Diretório Plugins64 não encontrado.' + #13#10 + #13#10 +
-            'Diretório Draw selecionado:' + #13#10 + drawDir + #13#10 + #13#10 +
-            'Diretório Plugins64 esperado:' + #13#10 + Plugins64Path + #13#10 + #13#10 +
-            'Confirme que o CorelDRAW está instalado corretamente.'),
-            mbCriticalError, MB_OK);
-          Result := False;
-          exit;
+          if not ForceDirectories(Plugins64Path) then
+          begin
+            MsgBox(GetLocalizedString(
+              'Failed to create Plugins64 directory:' + #13#10 + Plugins64Path,
+              '创建 Plugins64 目录失败：' + #13#10 + Plugins64Path,
+              'Falha ao criar diretório Plugins64:' + #13#10 + Plugins64Path),
+              mbCriticalError, MB_OK);
+            Result := False;
+            exit;
+          end;
         end;
         
         SelectedDrawDirs.Add(drawDir);
