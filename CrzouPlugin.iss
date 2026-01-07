@@ -30,6 +30,7 @@ Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Source: "..\cdr-plugin\bin\x64\Release\cdr-plugin.cpg"; DestDir: "{code:GetPlugins64Dir}"; Flags: ignoreversion
 Source: "..\cdr-plugin\bin\x64\Release\cut-tool.exe";   DestDir: "{code:GetCrzouFilesDir}"; Flags: ignoreversion
 Source: "..\cdr-plugin\bin\x64\Release\uninstaller.exe"; DestDir: "{code:GetPlugins64Dir}"; Flags: ignoreversion
+Source: "..\cdr-plugin\bin\x64\Release\plugin_config.json"; DestDir: "{code:GetCrzouFilesDir}"; Flags: ignoreversion
 
 [Dirs]
 Name: "{code:GetCrzouFilesDir}"
@@ -586,9 +587,11 @@ var
   sourceCpgPath: string;
   sourceCutToolPath: string;
   sourceUninstallerPath: string;
+  sourceConfigPath: string;
   destCpgPath: string;
   destCutToolPath: string;
   destUninstallerPath: string;
+  destConfigPath: string;
 begin
   // 在安装完成后，将文件复制到所有选中的目录
   if CurStep = ssPostInstall then
@@ -606,6 +609,7 @@ begin
         sourceCpgPath := EnsureTrailingBackslash(plugins64Dir) + 'cdr-plugin.cpg';
         sourceCutToolPath := EnsureTrailingBackslash(crzouFilesDir) + 'cut-tool.exe';
         sourceUninstallerPath := EnsureTrailingBackslash(plugins64Dir) + 'uninstaller.exe';
+        sourceConfigPath := EnsureTrailingBackslash(crzouFilesDir) + 'plugin_config.json';
         
         // 复制到其他选中的目录
         for i := 1 to SelectedDrawDirs.Count - 1 do
@@ -624,6 +628,7 @@ begin
           destCpgPath := EnsureTrailingBackslash(plugins64Dir) + 'cdr-plugin.cpg';
           destCutToolPath := EnsureTrailingBackslash(crzouFilesDir) + 'cut-tool.exe';
           destUninstallerPath := EnsureTrailingBackslash(plugins64Dir) + 'uninstaller.exe';
+          destConfigPath := EnsureTrailingBackslash(crzouFilesDir) + 'plugin_config.json';
           
           if FileExists(sourceCpgPath) then
             FileCopy(sourceCpgPath, destCpgPath, False);
@@ -631,6 +636,8 @@ begin
             FileCopy(sourceCutToolPath, destCutToolPath, False);
           if FileExists(sourceUninstallerPath) then
             FileCopy(sourceUninstallerPath, destUninstallerPath, False);
+          if FileExists(sourceConfigPath) then
+            FileCopy(sourceConfigPath, destConfigPath, False);
         end;
       end;
     end;
